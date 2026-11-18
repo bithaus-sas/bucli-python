@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bucli"
+dynamic = ["version"]
+description = "Librería oficial de Bucli para Python: cliente de la API /v1, verificación de webhooks e integración con Django."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Bithaus SAS" }]
+keywords = ["bucli", "billing", "subscriptions", "wompi", "django"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
+    "Topic :: Office/Business :: Financial",
+    "Typing :: Typed",
+]
+dependencies = ["requests>=2.31,<3"]
+
+[project.optional-dependencies]
+django = ["Django>=4.2"]
+dev = ["Django>=4.2", "pytest>=8", "responses>=0.25", "ruff>=0.6", "build>=1.2"]
+
+[project.urls]
+Homepage = "https://bucli.co"
+Documentation = "https://github.com/bithaus-sas/bucli-python#readme"
+Source = "https://github.com/bithaus-sas/bucli-python"
+Changelog = "https://github.com/bithaus-sas/bucli-python/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "src/bucli/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bucli"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/bucli", "tests", "README.md", "CHANGELOG.md", "LICENSE"]
+# The bump test reads scripts/, Bithaus' own release tooling (not shipped).
+exclude = ["tests/test_saas_bump.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests"]
+# The README's snippets are aligned by hand for reading.
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "C4", "SIM", "PIE", "Q", "N"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["bucli"]
+known-local-folder = ["factories", "helpers", "tenants", "django_project", "test_resources"]
+
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "lf"
